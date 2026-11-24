@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Text;
 
 class Program
 {
@@ -11,13 +12,13 @@ class Program
         {
             for (int i = 0; i < offset; i++) //Ciclo for per controllare che non si vada oltre la Z
             {
-                if (c[j] < 'Z') //Se il valore non è Z 
+                if (c[j] < char.MaxValue) //Se il valore non è Z 
                 {
                     c[j]++; //continuiamo
                 }
                 else //Altrimenti
                 {
-                    c[j] = 'A'; //Torniamo ad A
+                    c[j] = char.MinValue; //Torniamo ad A
                 }
             }
         }
@@ -174,8 +175,15 @@ class Program
     static void Main()
     {
         string msg = Input.GetString("Inserisci il messaggio: ");
-        string encoded = Base64Encode(msg, true);
-        Console.WriteLine($"{msg} => {encoded}");
-        Console.WriteLine($"{encoded} => {Base64Decode(encoded, true)}");
+        foreach(string m in msg.Split(" "))
+        {
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0; i < char.MaxValue; i++)
+            {
+                Console.WriteLine($"{m} with {i} -> {CaesarDecrypt(m, i)}");
+                sb.Append(i + "=>" + CaesarDecrypt(m, i));
+            }
+            File.WriteAllText(m, sb.ToString());
+        }
     }
 }
